@@ -1,0 +1,43 @@
+package com.bashverse.motogalaxybackend.model;
+
+import com.bashverse.motogalaxybackend.domain.USER_ROLE;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+import lombok.Data;
+
+import java.util.HashSet;
+import java.util.Set;
+
+@Entity
+@Data
+public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private String fullName;
+
+    private String contact;
+
+    private USER_ROLE role;
+
+    @OneToMany
+    private Set<Address> addresses = new HashSet<>();
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "user coupons",
+            inverseJoinColumns = @JoinColumn(name = "coupon_id")
+    )
+    private Set<Coupon> usedCoupons=new HashSet<>();
+}
